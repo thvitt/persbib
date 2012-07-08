@@ -1,0 +1,67 @@
+\def\filename{persbib.dtx}
+\def\fileversion{0.2}
+\def\filedate{2012/07/08}
+% \iffalse meta-comment
+% 
+% persbib, Dokumentklasse für »Perspektive Bibliothek«
+% 
+% \fi
+% \iffalse
+%<*driver>
+\documentclass{ltxdoc}
+\usepackage{hypdoc}
+\usepackage[ngerman,german]{babel}
+\usepackage[utf8]{inputenc}
+\EnableCrossrefs
+\CodelineIndex
+\RecordChanges
+\DoNotIndex{\ ,\begingroup,\endgroup,\csname,\endcsname,\CurrentOption,\DeclareOption,\if,\else,\fi,\expandafter,\newcommand,\providecommand,\renewcommand,\def,\relax,\RequirePackage,\newif}
+\begin{document}
+  \DocInput{persbib.dtx}
+\end{document}
+%</driver>
+%
+% Now the installer:
+%
+%<*installer>
+\input docstrip
+
+\usedir{tex/latex/persbib}
+
+\generate{\file{persbib.cls}{\from{persbib.dtx}{class}}}
+% TODO add other files
+\endbatchfile
+%</installer>
+% 
+% \fi
+%
+% \author{Thorsten Vitt}
+% \title{Die \textsf{persbib} classes}
+% \maketitle
+%
+%
+%\section{Implementation}
+%\label{sec:implementation}
+%\iffalse
+%<*article|book|report|tvdoc>
+%\fi
+%
+%    \begin{macrocode}
+\NeedsTeXFormat{LaTeX2e}
+%<class>\ProvidesClass{persbib.cls}[\filedate v\fileversion Perspektive Bibliothek Class]
+%    \end{macrocode}
+%
+%\subsection{Option Handling}
+%\label{sec:impl-options}
+%
+%
+%
+% \PrintIndex
+% \PrintChanges
+%
+% \iffalse
+%%% Local Variables: 
+%%% mode: doctex
+%%% TeX-master: t
+%%% End: 
+% \fi
