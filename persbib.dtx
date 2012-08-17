@@ -8,7 +8,8 @@
 % \fi
 % \iffalse
 %<*driver>
-\documentclass{ltxdoc}
+\documentclass{persbib}
+\usepackage{doc}
 \usepackage{hypdoc}
 \usepackage[ngerman,german]{babel}
 \usepackage[utf8]{inputenc}
@@ -43,18 +44,228 @@
 %\section{Implementation}
 %\label{sec:implementation}
 %\iffalse
-%<*article|book|report|tvdoc>
+%<*class>
 %\fi
 %
 %    \begin{macrocode}
 \NeedsTeXFormat{LaTeX2e}
 %<class>\ProvidesClass{persbib.cls}[\filedate v\fileversion Perspektive Bibliothek Class]
 %    \end{macrocode}
+% 
+% Wir bauen auf \textsf{scrartcl} aus den KOMA-Script-Klassen auf:
+%    \begin{macrocode}
+\LoadClass[%
+  a4paper,
+  12pt,
+  oneside,
+  titlepage=false,
+  headings=normal,
+  numbers=endperiod
+]{scrartcl}
+%    \end{macrocode}
 %
-%\subsection{Option Handling}
-%\label{sec:impl-options}
+% Ränder: 3cm unten, 3.5cm sonst. Mit der Klassenoption
+% \verb|showframe| kann ein entsprechender Rahmen eingeblendet werden.
+%    \begin{macrocode}
+\RequirePackage[left=3.5cm,right=3.5cm,top=3.5cm,bottom=3cm]{geometry}
+%    \end{macrocode}
+%
+% 1.5zeilig ist default. Mit \verb|\singlespacing| im Dokument kann auf einzeilig zurückgeschaltet werden.
+%    \begin{macrocode}
+\RequirePackage[onehalfspacing]{setspace}
+%    \end{macrocode}
+%
+% Absätze um 1.25cm (Word-Übel) einziehen. TODO Optional machen
+%    \begin{macrocode}
+\setlength{\parindent}{1.25cm}
+%    \end{macrocode}
+%
+% Keine Seitenzahlen, Kopf- oder Fußzeilen
+%    \begin{macrocode}
+\pagestyle{empty}
+%    \end{macrocode}
+% 
+% Schrift- und Sprachwahl. Bei Xe\TeX\ gibt es das Problem, dass
+% gefälschte Kapitälchen (kleinbuchstaben = verkleinerte
+% Großbuchstaben wie in Word etwa) nicht funktionieren, d.\,h. es
+% würde eine Garamond mit echten Kapitälchen erforderlich sein. Weder
+% die URW-Garamond noch die Garamond aus den MS-Schriften bringen echte
+% Kapitälchen mit. Also: pdf\LaTeX\ benutzen.
+%    \begin{macrocode}
+%\RequirePackage{ifxetex}
+% \ifxetex
+%   \usepackage{fontspec}
+%   \setmainfont[Mapping=tex-text]{Garamond}
+%   \usepackage{polyglossia}
+%   \setmainlanguage[spelling=new]{german}
+% \else
+  \usepackage[german,ngerman]{babel}
+  \usepackage[T1]{fontenc}
+  \usepackage[urw-garamond]{mathdesign}
+%  \usepackage[sc,osf]{mathpazo}
+  \usepackage[utf8]{inputenx}
+% \fi
+%    \end{macrocode}
+% Überschriften und Description-Labels in fetter Serifenschrift
+%    \begin{macrocode}
+\setkomafont{sectioning}{\rmfamily\bfseries}
+\setkomafont{descriptionlabel}{\rmfamily\bfseries}
+%    \end{macrocode}
+% Endnoten
+%    \begin{macrocode}
+\RequirePackage{endnotes}
+%    \end{macrocode}
+% Endnoten erzeugen wie bei footnotes, nur mit end -- \verb|\endnote{Text}|.
+% Endnoten ausgeben mit \verb|\theendnotes|.
+% 
+% Endnoten sollen mit "Endnoten" überschrieben werden
+% Und ins inhaltsverzeichnis, etc.
+%    \begin{macrocode}
+\renewcommand{\notesname}{Endnoten}
+\renewcommand{\enoteheading}{\addsec{\notesname}%
+  \mbox{}\par\vskip-\baselineskip}
+%    \end{macrocode}
+% Endnotenformat: Hängender Einzug um 12pt, die Endnotenmarkierung
+% steht rechtsbündig in einer Box mit einem schmalen Spatium vom
+% Endnotentext getrennt.
+%    \begin{macrocode}
+\renewcommand{\enoteformat}
+{\setlength{\leftskip}{12pt}
+\noindent\enotesize\leavevmode\hskip-10pt\makebox[10pt][r]{\makeenmark\,}}
+%    \end{macrocode}
+% 
+% Für Anführungszeichen verwenden wir einheitlich das
+% \textsf{csquotes}-Paket, also mit
+% \verb|Meier schrieb: \enquote{Die Welt ist schlecht.}|
+%    \begin{macrocode}
+\usepackage{csquotes}
+%    \end{macrocode}
+% 
+% Das Hyperref-Paket erzeugt Links, wo links hingehören.
+%
+% Diese werden bei der Bildschirmanzeige farbig unterstrichen, und
+% zwar je nach Typ: URLs blau, sonstige Links (das sind vor allem die
+% Endnoten) cyan, Literaturverweise grün (default). Die Option
+% \textsf{pdfusetitle} sorgt für PDF-Metadaten aus dem Titel.
+% 
+% Das URL-Paket bewirkt einen sinnvollen Umbruch und eine einheitliche
+% Auszeichnung für URLs, die in Befehlen wie
+% \verb|\url{http://www.google.com/}| stehen. Wir wollen URLs in der
+% Dokumentschriftart, aber, Word angeglichen, in blau.
+%    \begin{macrocode}
+\RequirePackage{xcolor}
+\RequirePackage{hycolor}
+\RequirePackage{url}
+\RequirePackage[pdfborderstyle={/S/U/W 1},
+urlbordercolor={blue},
+linkbordercolor={cyan},
+pdfusetitle
+]{hyperref}
+\def\url@bluestyle{%
+  \def\UrlFont{\color{blue}}}
+\AtBeginDocument{\urlstyle{blue}}
+%    \end{macrocode}
+% Das hyperendnotes-Paket (anbei) von Ulrich Dirr setzt Hyperlinks für Endnoten.
+%    \begin{macrocode}
+\RequirePackage{hyperendnotes}
+%    \end{macrocode}
 %
 %
+%\subsection{Bibliographie}
+%\label{Bibliographie}
+%
+% Für das Literaturverzeichnis verwenden wir biblatex.
+%    \begin{macrocode}
+\RequirePackage[%
+  backend=biber,
+  bibstyle=apa,
+  citestyle=authoryear-icomp,
+  notetype=endonly,
+  hyperref=true,
+  date=terse,
+  urldate=terse,
+]{biblatex}
+\DeclareLanguageMapping{ngerman}{german-pb}
+\DeclareLanguageMapping{german}{german-pb}
+\DeclareFieldFormat{apacase}{#1}
+%    \end{macrocode}
+% Das Literaturverzeichnis ist in 10pt (\verb|\footnotesize|) zu
+% setzen, mit einer Zeile Abstand (12pt)
+%    \begin{macrocode}
+\renewcommand{\bibfont}{\footnotesize}
+\setlength{\bibitemsep}{12pt}
+%    \end{macrocode}
+% 
+% http://tex.stackexchange.com/questions/39919/biblatex-authoryear-icomp-brackets-around-the-year-in-footnotes
+%    \begin{macrocode}
+\DeclareCiteCommand{\foottextcite}[\mkbibfootnote]%
+  {\usebibmacro{cite:init}}
+  {\usebibmacro{citeindex}%
+   \usebibmacro{textcite}}
+  {}
+  {\usebibmacro{textcite:postnote}}
+
+\DeclareMultiCiteCommand{\foottextcites}[\mkbibfootnote]{\foottextcite}{\multicitedelim}
+\DeclareAutoCiteCommand{foottext}[l]{\foottextcite}{\foottextcites}
+\ExecuteBibliographyOptions{autocite=foottext}
+%    \end{macrocode}
+% Siehe apa.bbx, apa-german.lbx
+%    \begin{macrocode}
+\renewbibmacro*{url+urldate}{%
+  \ifthenelse{\iffieldundef{url}\OR\NOT\iffieldundef{doi}}
+     {}
+     {%
+       \iffieldundef{url}{}{%
+         \printfield{url}\renewcommand*{\finentrypunct}{\relax}
+         \setunit*{\addspace}
+         \iffieldundef{urlyear}{\printtext[parens]{FIXME URLDATE}}{%
+           \printtext[parens]{\bibstring{retrieved}\addspace\printurldate}}}}}
+%    \end{macrocode}
+%    \begin{macrocode}
+\renewenvironment{quote}{%
+\begingroup
+\singlespacing
+\footnotesize
+\addmargin[1.25cm]{0em}  % FIXME Wieweit sollen wir denn einrücken?
+}{%
+\endaddmargin
+\vspace{12pt}
+\endgroup
+}
+%    \end{macrocode}
+%
+%
+%\subsection{Titelei}
+%\label{sec:titelei}
+% Titel: 18pt linksbündige Kapitälchen. Keine Silbentrennung ...
+%
+% 
+%    \begin{macrocode}
+\newcommand{\institution}[1]{%
+  \gdef\persbib@institution{#1}}
+\newcommand{\authoremail}[1]{%
+  \gdef\persbib@email{#1}}
+\renewcommand{\maketitle}{%
+\begingroup
+\KOMAoption{parskip}{half}
+{~\\[18pt]
+\raggedright
+\Large
+\textsc{%
+\@title}\par}
+{\vspace{18pt}
+\raggedright
+% Autor: 12pt, Institution.
+\normalsize
+\@author\par
+{\persbib@institution}\par%
+{\persbib@email}\par}%
+\vspace{12pt}
+\rule{\linewidth}{1pt}
+\bigskip
+\endgroup
+}
+%    \end{macrocode}
 %
 % \PrintIndex
 % \PrintChanges
