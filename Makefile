@@ -1,7 +1,7 @@
 PACKAGENAME=persbib
 BINARIES=persbib.cls
 SOURCES=$(PACKAGENAME).dtx $(PACKAGENAME).ins
-DOC=$(PACKAGENAME).dvi $(PACKAGENAME).pdf
+DOC=$(PACKAGENAME).dvi $(PACKAGENAME).pdf example.pdf
 
 INSTALLDIR=`kpsexpand '$${TEXMFHOME}'/tex/latex/persbib`
 
@@ -21,6 +21,7 @@ persbib.dvi: persbib.dtx persbib.cls
 
 persbib.pdf: persbib.dtx persbib.cls
 
+example.pdf : example.tex persbib.cls
 
 
 $(PACKAGENAME).tds.zip : $(BINARIES) $(SOURCES) $(DOC)
@@ -66,9 +67,16 @@ $(BINARIES) : $(PACKAGENAME).ins $(PACKAGENAME).dtx
 	latex $<
 
 %.pdf : %.dtx
+%.pdf : %.tex
 	pdflatex $<
+	-[ -r $*.glo ] && makeindex $*.glo
+	-[ -r $*.idx ] && makeindex $*.idx
+	-[ -r $*.bcf ] && biber $*.bcf
 	pdflatex $<
 
 %.dvi : %.dtx
 	latex $<
+	makeindex $*.glo
+	makeindex $*.idx
 	latex $<
+

@@ -10,13 +10,16 @@
 %<*driver>
 \documentclass{persbib}
 \usepackage{doc}
-\usepackage{hypdoc}
+\usepackage{ccicons}
 \usepackage[ngerman,german]{babel}
 \usepackage[utf8]{inputenc}
 \EnableCrossrefs
 \CodelineIndex
 \RecordChanges
 \DoNotIndex{\ ,\begingroup,\endgroup,\csname,\endcsname,\CurrentOption,\DeclareOption,\if,\else,\fi,\expandafter,\newcommand,\providecommand,\renewcommand,\def,\relax,\RequirePackage,\newif}
+\providecommand{\cmd}[1]{\texttt{\textbackslash #1}}
+\providecommand{\marg}[1]{\texttt\{\meta{#1}\texttt\}}
+
 \begin{document}
   \DocInput{persbib.dtx}
 \end{document}
@@ -37,8 +40,14 @@
 % \fi
 %
 % \author{Thorsten Vitt}
-% \title{Die \textsf{persbib} classes}
+% \authoremail{tv+persbib@thorstenvitt.de}
+% \institution{---}
+% \title{\textsf{persbib}:\\ Dokumentklasse für\\ Perspektive Bibliothek\footnotemark}
 % \maketitle
+% \footnotetext{%
+%    Die Dokumentation bezieht sich auf \filename{} Version~\fileversion{} vom \filedate{}.\\
+%    Dieses Werk steht unter der Lizenz: \href{http://creativecommons.org/licenses/by-sa/3.0/de/}{Creative Commons: Namensnennung, Weitergabe unter gleichen Bedingungen 3.0 Deutschland}. \ccbysa{}}
+%  
 %
 %
 %\section{Implementation}
@@ -50,6 +59,22 @@
 %    \begin{macrocode}
 \NeedsTeXFormat{LaTeX2e}
 %<class>\ProvidesClass{persbib.cls}[\filedate v\fileversion Perspektive Bibliothek Class]
+%    \end{macrocode}
+%
+%
+%\subsection{Klassenoptionen}
+%\label{sec:options}
+%
+% Neben den üblichen KOMA-Script-Optionen bieten wir zur Zeit eine
+% Option \textsf{endnotes} an. Ist sie gesetzt, wird das Paket
+% \textsf{endnotes} geladen und konfiguriert, sodass Endnoten im Stil
+% der ersten Ausgabe der \emph{Perspektive Bibliothek} gesetzt werden
+% können.
+%    \begin{macrocode}
+\newif\if@persbib@endnotes\@persbib@endnotesfalse
+\DeclareOption{endnotes}{\@persbib@endnotestrue}
+\DeclareOption*{\PassOptionsToClass{\CurrentOption}{scrartcl}}
+\ProcessOptions\relax
 %    \end{macrocode}
 % 
 % Wir bauen auf \textsf{scrartcl} aus den KOMA-Script-Klassen auf:
@@ -103,7 +128,7 @@
   \usepackage[T1]{fontenc}
   \usepackage[urw-garamond]{mathdesign}
 %  \usepackage[sc,osf]{mathpazo}
-  \usepackage[utf8]{inputenx}
+%  \usepackage[utf8]{inputenx}
 % \fi
 %    \end{macrocode}
 % Überschriften und Description-Labels in fetter Serifenschrift
@@ -113,6 +138,7 @@
 %    \end{macrocode}
 % Endnoten
 %    \begin{macrocode}
+\if@persbib@endnotes
 \RequirePackage{endnotes}
 %    \end{macrocode}
 % Endnoten erzeugen wie bei footnotes, nur mit end -- \verb|\endnote{Text}|.
@@ -132,6 +158,20 @@
 \renewcommand{\enoteformat}
 {\setlength{\leftskip}{12pt}
 \noindent\enotesize\leavevmode\hskip-10pt\makebox[10pt][r]{\makeenmark\,}}
+%    \end{macrocode}
+% 
+% Falls die Endnotenoption nicht angegeben wurde \emph{und} bis zum
+% Dokumentbeginn kein Endnotenkommando definiert wurde (also
+% z.\,B. das Endnotenpaket nicht manuell geladen wurde), wird hier nun
+% ein Kompatibilitätslayer eingezogen, indem die typischen
+% Endnotenkommandos auf ihre Fußnoten-Äquivalenzen umgebogen werden:
+%    \begin{macrocode}
+\else\AtBeginDocument{\@ifundefined{endnote}{%
+  \let\endnote\footnote
+  \let\endnotemark\footnotemark
+  \let\endnotetext\footnotetext
+  \let\theendnotes\@empty}}
+\fi
 %    \end{macrocode}
 % 
 % Für Anführungszeichen verwenden wir einheitlich das
@@ -180,7 +220,7 @@ pdfusetitle
   backend=biber,
   bibstyle=apa,
   citestyle=authoryear-icomp,
-  notetype=endonly,
+  notetype=foot+end,
   hyperref=true,
   date=terse,
   urldate=terse,
@@ -196,7 +236,9 @@ pdfusetitle
 \setlength{\bibitemsep}{12pt}
 %    \end{macrocode}
 % 
-% http://tex.stackexchange.com/questions/39919/biblatex-authoryear-icomp-brackets-around-the-year-in-footnotes
+% Die folgende Lösung bewirkt, dass in Fuß-/Endnoten die Zitation nach dem Muster \emph{Müller (2012)} erfolgt, also mit Jahr in Klammern (nach einem Beitrag\footnote{\url{http://tex.stackexchange.com/questions/39919/biblatex-authoryear-icomp-brackets-around-the-year-in-footnotes}} von Lockstep auf StackExchange).
+%
+% Dazu werden zunächst die beiden Zitierkommandos \cmd{foottextcite} und \cmd{foottextcites} definiert:
 %    \begin{macrocode}
 \DeclareCiteCommand{\foottextcite}[\mkbibfootnote]%
   {\usebibmacro{cite:init}}
@@ -206,6 +248,9 @@ pdfusetitle
   {\usebibmacro{textcite:postnote}}
 
 \DeclareMultiCiteCommand{\foottextcites}[\mkbibfootnote]{\foottextcite}{\multicitedelim}
+%    \end{macrocode}
+% Dann stellen wir biblatex' Autocite-Mechanismus auf diese Kommandos um:
+%    \begin{macrocode}
 \DeclareAutoCiteCommand{foottext}[l]{\foottextcite}{\foottextcites}
 \ExecuteBibliographyOptions{autocite=foottext}
 %    \end{macrocode}
@@ -237,38 +282,51 @@ pdfusetitle
 %
 %\subsection{Titelei}
 %\label{sec:titelei}
-% Titel: 18pt linksbündige Kapitälchen. Keine Silbentrennung ...
+% Für die Titelei stehen neben den üblichen
+% \cmd{author}\marg{Autorname} und \cmd{title}\marg{Titel} die
+% Kommandos \cmd{authoremail}\marg{E-Mail-Adresse} und
+% \cmd{institution}\marg{Autorinstitution(en)} zur Verfügung. All
+% diese Kommandos setzen entsprechende Metadatenfelder, die dann mit
+% \cmd{maketitle} tatsächlich gesetzt werden.
 %
-% 
+% \begin{macro}{\authoremail}
+% \begin{macro}{\institution}
+% \begin{macro}{\maketitle}
 %    \begin{macrocode}
 \newcommand{\institution}[1]{%
   \gdef\persbib@institution{#1}}
 \newcommand{\authoremail}[1]{%
   \gdef\persbib@email{#1}}
-\renewcommand{\maketitle}{%
-\begingroup
-\KOMAoption{parskip}{half}
-{~\\[18pt]
-\raggedright
-\Large
-\textsc{%
-\@title}\par}
-{\vspace{18pt}
-\raggedright
-% Autor: 12pt, Institution.
-\normalsize
-\@author\par
-{\persbib@institution}\par%
-{\persbib@email}\par}%
-\vspace{12pt}
-\rule{\linewidth}{1pt}
-\bigskip
-\endgroup
-}
 %    \end{macrocode}
-%
-% \PrintIndex
-% \PrintChanges
+% 
+% Der Titel soll in linksbündigen 18-pt-Kapitälchen gesetzt werden,
+% das entspricht \cmd{\Large}:
+%    \begin{macrocode}
+\AtBeginDocument{%
+  \renewcommand{\maketitle}{%
+    \begingroup
+    \KOMAoption{parskip}{half}
+    {~\\[18pt]
+      \raggedright
+      \Large
+      \textsc{%
+        \@title}\par}
+    {\vspace{18pt}
+      \raggedright
+      \normalsize
+      \@author\par
+      {\persbib@institution}\par%
+      {\persbib@email}\par}%
+      \vspace{12pt}
+      \rule{\linewidth}{1pt}
+      \bigskip
+      \endgroup}}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+%    \begin{macrocode}
+%    \end{macrocode}
 %
 % \iffalse
 %%% Local Variables: 
