@@ -33,6 +33,7 @@
 \usedir{tex/latex/persbib}
 
 \generate{\file{persbib.cls}{\from{persbib.dtx}{class}}}
+\generate{\file{german-pb.lbx}{\from{persbib.dtx}{lbx}}}
 % TODO add other files
 \endbatchfile
 %</installer>
@@ -58,7 +59,7 @@
 %
 %    \begin{macrocode}
 \NeedsTeXFormat{LaTeX2e}
-%<class>\ProvidesClass{persbib.cls}[\filedate v\fileversion Perspektive Bibliothek Class]
+%<class>\ProvidesClass{persbib}[\filedate v\fileversion Perspektive Bibliothek Class]
 %    \end{macrocode}
 %
 %
@@ -327,7 +328,27 @@ pdfusetitle
 % \end{macro}
 %    \begin{macrocode}
 %    \end{macrocode}
+%</class>
 %
+%\subsection{Bibliographie: Sprachanpassung}
+%
+% Die Sprachanpassung für bib\LaTeX\ beruht auf der deutschen
+% APA-Anpassung und ändert nur wenige
+% \emph{Perspektive-Bibliothek}-Spezifika:
+%
+%    \begin{macrocode}
+%<*lbx>
+\ProvidesFile{german-pb.lbx}
+\InheritBibliographyExtras{german-apa}
+
+\DeclareBibliographyStrings{%
+  inherit          = {german},
+  and              = {{\&}{\&}},
+  retrieved        = {{abgerufen\space am}{abgerufen\space am}},
+}
+\endinput
+%</lbx>
+%    \end{macrocode}
 % \iffalse
 %%% Local Variables: 
 %%% mode: doctex

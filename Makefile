@@ -1,5 +1,5 @@
 PACKAGENAME=persbib
-BINARIES=persbib.cls
+BINARIES=persbib.cls german-pb.lbx
 SOURCES=$(PACKAGENAME).dtx $(PACKAGENAME).ins
 DOC=$(PACKAGENAME).dvi $(PACKAGENAME).pdf example.pdf
 
@@ -12,7 +12,7 @@ dist : $(PACKAGENAME).zip
 install: $(PACKAGENAME).tds.zip 
 	unzip -d $(INSTALLDIR) $^ 
 	texhash
-	
+
 BINDIR=texmf/tex/latex/$(PACKAGENAME)
 DOCDIR=texmf/doc/latex/$(PACKAGENAME)
 SRCDIR=texmf/source/latex/$(PACKAGENAME)
@@ -67,6 +67,13 @@ $(BINARIES) : $(PACKAGENAME).ins $(PACKAGENAME).dtx
 	latex $<
 
 %.pdf : %.dtx
+	pdflatex $<
+	-[ -r $*.glo ] && makeindex $*.glo
+	-[ -r $*.idx ] && makeindex $*.idx
+	-[ -r $*.bcf ] && biber $*.bcf
+	pdflatex $<
+
+
 %.pdf : %.tex
 	pdflatex $<
 	-[ -r $*.glo ] && makeindex $*.glo
