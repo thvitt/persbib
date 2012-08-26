@@ -11,7 +11,7 @@ dist : $(PACKAGENAME).zip
 
 
 install: $(PACKAGENAME).tds.zip 
-	unzip -d $(INSTALLDIR) $^ 
+	unzip -o -d $(INSTALLDIR) $^ 
 	texhash
 
 BINDIR=texmf/tex/latex/$(PACKAGENAME)
@@ -26,6 +26,7 @@ persbib-example.pdf : persbib-example.tex persbib.cls
 
 
 $(PACKAGENAME).tds.zip : $(BINARIES) $(SOURCES) $(DOC)
+	-rm -f $@
 	-install -d $(BINDIR) $(SRCDIR) $(DOCDIR)
 	install -m 644 $(BINARIES) $(BINDIR)
 	install -m 644 $(DOC) $(EXSOURCES) $(DOCDIR)
@@ -34,6 +35,7 @@ $(PACKAGENAME).tds.zip : $(BINARIES) $(SOURCES) $(DOC)
 	rmdir texmf
 
 $(PACKAGENAME).zip : $(SOURCES) persbib.tds.zip $(PACKAGENAME).pdf
+	-rm -f $@
 	-mkdir $(PACKAGENAME)
 	-install -m 644 $^ $(PACKAGENAME)
 	zip -mr $@ $(PACKAGENAME)
