@@ -467,7 +467,9 @@ pdfusetitle
 %    \end{macrocode}
 % Das hyperendnotes-Paket (anbei) von Ulrich Dirr setzt Hyperlinks für Endnoten.
 %    \begin{macrocode}
-\RequirePackage{hyperendnotes}
+\if@persbib@endnotes
+  \RequirePackage{hyperendnotes}
+\fi
 %    \end{macrocode}
 %
 %
