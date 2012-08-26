@@ -1,6 +1,6 @@
 \def\filename{persbib.dtx}
-\def\fileversion{0.2}
-\def\filedate{2012/07/08}
+\def\fileversion{0.3}
+\def\filedate{2012/08/25}
 % \iffalse meta-comment
 % 
 % persbib, Dokumentklasse für »Perspektive Bibliothek«
@@ -20,8 +20,12 @@
 \providecommand{\cmd}[1]{\texttt{\textbackslash #1}}
 \providecommand{\marg}[1]{\texttt\{\meta{#1}\texttt\}}
 
+\bibliography{persbib}
+
 \begin{document}
   \DocInput{persbib.dtx}
+  \clearpage
+  \printbibliography
 \end{document}
 %</driver>
 %
@@ -34,12 +38,13 @@
 
 \generate{\file{persbib.cls}{\from{persbib.dtx}{class}}}
 \generate{\file{german-pb.lbx}{\from{persbib.dtx}{lbx}}}
-% TODO add other files
+\generate{\file{persbib-example.tex}{\from{persbib.dtx}{example}}}
+\generate{\file{persbib.bib}{\from{persbib.dtx}{bib}}}
 \endbatchfile
 %</installer>
 % 
 % \fi
-%
+% \pagestyle{plain}
 % \author{Thorsten Vitt}
 % \authoremail{tv+persbib@thorstenvitt.de}
 % \institution{---}
@@ -50,6 +55,247 @@
 %    Dieses Werk steht unter der Lizenz: \href{http://creativecommons.org/licenses/by-sa/3.0/de/}{Creative Commons: Namensnennung, Weitergabe unter gleichen Bedingungen 3.0 Deutschland}. \ccbysa{}}
 %  
 %
+%\section{Kurzbeschreibung}
+%\label{sec:intro}
+%
+% Dieses Paket definiert eine \LaTeX-Dokumentklasse, mit der Beiträge
+% für die Open-Access-Zeitschrift \emph{Perspektive Bibliothek}\autocite{PB}
+% gesetzt werden können.
+%
+% Ich habe das Rad nicht neu erfunden: Die Dokumentklasse baut auf
+% \emph{KOMA-Script} von Markus Kohm auf (genauer: auf
+% \textsf{scrartcl}), für die Bibliographie wird \textsf{biblatex} und
+% eine Abwandlung von dessen APA-Style verwendet. Beide Pakete haben
+% exzellente Dokumentation, auf die ich für alles Grundsätzliche, das
+% ich hier nicht abhandeln mag, verweise.
+%
+%
+%\minisec{Hinweis}
+%
+% Bislang ist erst ein Teil der Anforderungen umgesetzt. Noch offen
+% sind Abbildungen und Tabellen, noch ungeprüft Aufzählungen aller
+% Art.
+%
+%
+%\subsection{Voraussetzungen}
+%\label{sec:voraussetzungen}
+%
+% Neben einer halbwegs aktuellen \LaTeX-Version zwingend benötigt
+% werden die folgenden Pakete, die schon vorhanden sein können oder
+% auch nicht:
+%
+% \begin{itemize}
+% \item
+%   \href{http://www.ctan.org/pkg/koma-script/}{KOMA-Script}\autocite{komascript}
+%   \href{http://mirror.ctan.org/macros/latex/contrib/koma-script/doc/scrguide.pdf}{(Anleitung)}
+%   als Grundlage der Dokumentklasse
+% \item \href{http://www.ctan.org/pkg/biblatex/}{biblatex}\autocite{biblatex} \href{http://mirror.ctan.org/macros/latex/contrib/biblatex/doc/biblatex.pdf}{(Anleitung)} für das Literaturverzeichnis
+% \item biber\autocite{biber}: Hilfsprogramm zum Sortieren des Literaturverzeichnis.
+% \item biblatex-apa\autocite{biblatex-apa}: Grundlage des Literaturverzeichnisstils
+% \end{itemize}
+%
+% In, z.\,B., \TeX{}live~2012 oder Mac\TeX~2012 sind all diese Pakete
+% enthalten.
+%
+%\subsection{Installation}
+%\label{sec:install}
+%
+% Zur Installation benutzt man am einfachsten die Datei
+% \emph{persbib.tds.zip}, in der alle Dateien bereits in die richtigen
+% Unterverzeichnisse verpackt geliefert werden. Diese Datei entpackt
+% man in seinem \verb|$HOMETEXMF|-Verzeichnis (typischerweise:
+% Unix/Linux: \verb|~/texmf|, Mac~OS~X:
+% \verb|~/Library/texmf|\footnote{vgl. dazu
+% \url{http://www.tug.org/mactex/faq/index.html\#qm04}}). Ggf. muss dann
+% noch \verb|texhash| aufgerufen oder über das \TeX{}Live-Utility die
+% \emph{filename database} aktualisiert werden.
+%
+%
+%\subsection{Benutzung}
+%\label{sec:benutzung}
+% 
+% Die Dokumentklasse lädt bereits \textsf{biblatex} und eine Reihe
+% weiterer benötigter Pakete.
+% 
+% \DescribeMacro{\author}
+% \DescribeMacro{\title}
+% \DescribeMacro{\authoremail}
+% \DescribeMacro{\institution}
+% \DescribeMacro{\maketitle}
+
+% Für die Titelei sind zwei weitere Kommandos für Institution und
+% E-Mail definiert worden. Ebenso wie bei den bekannten Kommandos für
+% Autor und Titel werden die Werte im Argument angegeben und
+% schließlich mit \verb|\maketitle| die gesamte Titelei gesetzt. Ein
+% Beispiel ist im Beispielartikel in Abschnitt~\ref{sec:beispiel-artikel} 
+%
+%
+%
+%\section{Beispiel}
+%\label{sec:beispiel}
+%
+% Hier nun ein kleines Beispiel für einen mit dieser Klasse gesetzten
+% Text.
+% 
+% \subsection{Artikel}
+%\label{sec:beispiel-artikel}
+% 
+% Das Dokument lädt zunächst die Dokumentklasse, gibt die
+% verwendete(n) Sprachen an und lädt das Paket \textsf{babel}, das für
+% die Unterstützung anderer Sprachen als US-Englisch erforderlich
+% ist. Schließlich wird das Encoding des Texts angegeben, das möge
+% jeder individuell anpassen.
+%
+% Dann folgt ein Block mit den Metadaten, die im Titel sowie in den
+% PDF-Metadaten landen. Schließlich wird mit
+% \cmd{bibliography}\marg{Dateiname} die Bibliographie-Datenbank
+% angegeben – im Beispiel verwenden wir der einfachheit halber die
+% Bibliographie, die auch dieser Dokumentation zugrunde liegt
+% (abgedruckt im Abschnitt~\ref{sec:persbib-bib}).
+%
+% Die Anweisung \cmd{maketitle} am Beginn des Dokumenttexts setzt
+% schließlich die Titelei samt der Trennlinie.
+%
+% Am Ende des Texts folgt auf einer neuen Seite (\cmd{clearpage})
+% schließlich das Literaturverzeichnis, das durch
+% \cmd{printbibliography} ausgegeben wird.
+% 
+% \iffalse
+%<*example>
+% \fi
+%    \begin{macrocode}
+\documentclass[ngerman,german]{persbib}
+\usepackage{babel}
+\usepackage[utf8]{inputenx}
+
+\title{Beispiel für die \textsf{persbib}-Klasse}
+\author{Thorsten Vitt}
+\institution{Institut für Beispielkunde und Exemplifizierung}
+\authoremail{tv+persbib@thorstenvitt.de}
+
+\bibliography{persbib.bib}
+
+\begin{document}
+
+\maketitle
+
+\section{Einleitung}
+\label{sec:einleitung}
+
+Dies ist ein kleines Beispiel für einen mit der
+\textsf{persbib}-Klasse für \emph{Perspektive Bibliothek}\footnote{%
+  zu finden unter \url{http://perspektive-bibliothek.uni-hd.de}}
+gesetzten Artikel.  Ein längeres Beispiel ist Mirjam Blümms
+Beitrag\autocite{Bluemm2012} zur ersten Ausgabe der Zeitschrift.%
+\footnote{Die Fußnoten sind übrigens nicht nur Literaturverweisen
+  vorbehalten, auch längere Texte können dort untergebracht
+  werden. In einem solchen Falle mag es sinnvoll sein,
+  Literaturverweise \smartcite[wie][]{Bluemm2012} direkt dort in den
+  Text zu schreiben.
+
+  Fußnoten aus mehreren Absätzen sind vermutlich nicht besonders
+  sinnvoll und sollten deshalb bestenfalls zu Demonstrationszwecken
+  eingesetzt werden.}
+
+\clearpage
+\printbibliography
+
+\end{document}
+%    \end{macrocode}
+% \iffalse
+%</example>
+%<*bib>
+% \fi
+%
+%
+%\subsection{Bibliographiedatenbank}
+%\label{sec:persbib.bib}
+%
+% Hier nun die Bib\TeX-Datei für die Dokumentklasse und die Beispieldatei:
+%    \begin{macrocode}
+@ARTICLE{Bluemm2012,
+  author = {Mirjam Blümm},
+  title = {Zur Rolle der Deutschen Forschungsgemeinschaft (DFG) und des Joint
+	Information Committee (JISC) innerhalb der deutschen und englischen
+	Bibliothekslandschaft exemplifiziert an ausgewählten Tätigkeitsbereichen
+	und Förderprojekten},
+  journal = {Perspektive Bibliothek},
+  year = {2012},
+  volume = {1},
+  number = {1},
+  issn = {2194-8992},
+  url = {http://archiv.ub.uni-heidelberg.de/ojs/index.php/bibliothek/article/view/9404},
+  urldate = {2012-08-20}
+}
+
+@ELECTRONIC{biber,
+  author = {François Charette and Philip Kime},
+  title = {Biber: A BibTeX replacement for users of BibLaTeX},
+  url = {http://ctan.org/pkg/biber},
+  owner = {tv},
+  timestamp = {2012.08.25},
+  urldate = {2012-08-25}
+}
+
+@ELECTRONIC{biblatex-apa,
+  author = {Philip Kime},
+  month = {6},
+  year = {2012},
+  title = {APA Bib\LaTeX style},
+  url = {http://www.ctan.org/pkg/biblatex-apa},
+  owner = {tv},
+  timestamp = {2012.08.25},
+  urldate = {2012-08-25}
+}
+
+@ELECTRONIC{komascript.de,
+  author = {Markus Kohm and others},
+  title = {KOMA-Script Documentation Project},
+  url = {http://komascript.de/},
+  owner = {tv},
+  timestamp = {2012.08.20},
+  urldate = {2012-08-20}
+}
+
+@ELECTRONIC{komascript,
+  author = {Markus Kohm and others},
+  month = {07},
+  year = {2012},
+  title = {KOMA-Script: ein wandelbares LaTeX2e-Paket},
+  url = {http://www.ctan.org/pkg/koma-script/},
+  owner = {tv},
+  timestamp = {2012.08.25},
+  urldate = {2012-08-25}
+}
+
+@ELECTRONIC{biblatex,
+  author = {Philipp Lehmann},
+  month = {8},
+  year = {2012},
+  title = {Package biblatex: Bibliographies in LaTeX using BibTeX for sorting
+	only.},
+  url = {http://www.ctan.org/pkg/biblatex},
+  owner = {tv},
+  timestamp = {2012.08.25},
+  urldate = {2012-08-25}
+}
+
+@PERIODICAL{PB,
+  title = {Perspektive Bibliothek. Die Open Access-Zeitschrift der Münchner
+	Bibliotheksreferendare},
+  year = {2012},
+  editor = {Jochen Apel and Martin Herrmann},
+  url = {http://perspektive-bibliothek.uni-hd.de},
+  issn = {2194-8992},
+  owner = {tv},
+  timestamp = {2012.08.25},
+  urldate = {2012-08-25}
+}
+
+%    \end{macrocode}
+% \iffalse
+%</bib>
+% \fi
 %
 %\section{Implementation}
 %\label{sec:implementation}
@@ -137,7 +383,20 @@
 \setkomafont{sectioning}{\rmfamily\bfseries}
 \setkomafont{descriptionlabel}{\rmfamily\bfseries}
 %    \end{macrocode}
-% Endnoten
+%
+% 
+%
+%\subsubsection{Fuß- und Endnoten}
+%\label{sec:footnotes}
+%
+% Fußnoten werden ohne zusätzlichen Einzug gesetzt. In der ersten
+% Zeile wird für das Fußnotenzeichen incl. des nachfolgenden Spatium
+% 1.25\,em reserviert. Um denselben Betrag werden Absätze in den
+% Fußnoten eingezogen.
+%    \begin{macrocode}
+\deffootnote[1.25em]{0em}{1.25em}{%
+  \textsuperscript{\thefootnotemark}\,}
+%    \end{macrocode}
 %    \begin{macrocode}
 \if@persbib@endnotes
 \RequirePackage{endnotes}
@@ -326,8 +585,6 @@ pdfusetitle
 % \end{macro}
 % \end{macro}
 % \end{macro}
-%    \begin{macrocode}
-%    \end{macrocode}
 %</class>
 %
 %\subsection{Bibliographie: Sprachanpassung}
@@ -349,6 +606,7 @@ pdfusetitle
 \endinput
 %</lbx>
 %    \end{macrocode}
+% 
 % \iffalse
 %%% Local Variables: 
 %%% mode: doctex

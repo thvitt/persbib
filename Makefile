@@ -1,9 +1,10 @@
 PACKAGENAME=persbib
 BINARIES=persbib.cls german-pb.lbx
 SOURCES=$(PACKAGENAME).dtx $(PACKAGENAME).ins
-DOC=$(PACKAGENAME).dvi $(PACKAGENAME).pdf example.pdf
+EXSOURCES=$(PACKAGENAME).bib $(PACKAGENAME)-example.tex
+DOC=$(PACKAGENAME).dvi $(PACKAGENAME).pdf persbib-example.pdf
 
-INSTALLDIR=`kpsexpand '$${TEXMFHOME}'/tex/latex/persbib`
+INSTALLDIR=`kpsexpand '$${TEXMFHOME}'`
 
 default : $(DOC) $(BINARIES)
 dist : $(PACKAGENAME).zip
@@ -21,13 +22,13 @@ persbib.dvi: persbib.dtx persbib.cls
 
 persbib.pdf: persbib.dtx persbib.cls
 
-example.pdf : example.tex persbib.cls
+persbib-example.pdf : persbib-example.tex persbib.cls
 
 
 $(PACKAGENAME).tds.zip : $(BINARIES) $(SOURCES) $(DOC)
 	-install -d $(BINDIR) $(SRCDIR) $(DOCDIR)
 	install -m 644 $(BINARIES) $(BINDIR)
-	install -m 644 $(DOC) $(DOCDIR)
+	install -m 644 $(DOC) $(EXSOURCES) $(DOCDIR)
 	install -m 644 $(SOURCES) $(SRCDIR)
 	cd texmf && zip -mr ../$@ *
 	rmdir texmf
