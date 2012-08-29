@@ -1,6 +1,6 @@
 \def\filename{persbib.dtx}
-\def\fileversion{0.3}
-\def\filedate{2012/08/25}
+\def\fileversion{0.4}
+\def\filedate{2012/08/29}
 % \iffalse meta-comment
 % 
 % persbib, Dokumentklasse für »Perspektive Bibliothek«
@@ -526,7 +526,7 @@ pdfusetitle
        \iffieldundef{url}{}{%
          \printfield{url}\renewcommand*{\finentrypunct}{\relax}
          \setunit*{\addspace}
-         \iffieldundef{urlyear}{\printtext[parens]{FIXME URLDATE}}{%
+         \iffieldundef{urlyear}{}{%\printtext[parens]{FIXME URLDATE}}{%
            \printtext[parens]{\bibstring{retrieved}\addspace\printurldate}}}}}
 %    \end{macrocode}
 %    \begin{macrocode}
