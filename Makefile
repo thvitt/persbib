@@ -57,9 +57,9 @@ clean :
 	-rm $(PACKAGENAME)-example.aux $(PACKAGENAME)-example.bcf $(PACKAGENAME)-example.glo $(PACKAGENAME)-example.hd $(PACKAGENAME)-example.idx $(PACKAGENAME)-example.log $(PACKAGENAME)-example.out $(PACKAGENAME)-example.run.xml $(PACKAGENAME)-example.bbl $(PACKAGENAME)-example.blg $(PACKAGENAME)-example.ilg $(PACKAGENAME)-example.ind
 
 upload : $(PACKAGENAME).tds.zip $(PACKAGENAME).pdf $(PACKAGENAME).zip
-	github-upload $(PACKAGENAME).zip
-	github-upload -d "Anleitung" -f $(PACKAGENAME).pdf
-	github-upload -d "Alle Dateien in TDS-Struktur -- in $$HOMETEXMF entpacken" -f $(PACKAGENAME).tds.zip
+	github-upload -m application/zip -f $(PACKAGENAME).zip
+	github-upload -m application/pdf -d "Anleitung" -f $(PACKAGENAME).pdf
+	github-upload -m application/zip -d "Alle Dateien in TDS-Struktur -- in $$HOMETEXMF entpacken" -f $(PACKAGENAME).tds.zip
 
 
 
