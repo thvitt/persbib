@@ -2,7 +2,7 @@ PACKAGENAME=persbib
 BINARIES=persbib.cls german-pb.lbx
 SOURCES=$(PACKAGENAME).dtx $(PACKAGENAME).ins
 EXSOURCES=$(PACKAGENAME).bib $(PACKAGENAME)-example.tex
-DOC=$(PACKAGENAME).dvi $(PACKAGENAME).pdf persbib-example.pdf
+DOC=$(PACKAGENAME).dvi $(PACKAGENAME).pdf persbib-example.pdf README.md
 
 INSTALLDIR=`kpsexpand '$${TEXMFHOME}'`
 
@@ -34,7 +34,7 @@ $(PACKAGENAME).tds.zip : $(BINARIES) $(SOURCES) $(DOC)
 	cd texmf && zip -mr ../$@ *
 	rmdir texmf
 
-$(PACKAGENAME).zip : $(SOURCES) persbib.tds.zip $(PACKAGENAME).pdf
+$(PACKAGENAME).zip : $(SOURCES) README.md $(PACKAGENAME).pdf
 	-rm -f $@
 	-mkdir $(PACKAGENAME)
 	-install -m 644 $^ $(PACKAGENAME)
@@ -57,9 +57,9 @@ clean :
 	-rm $(PACKAGENAME)-example.aux $(PACKAGENAME)-example.bcf $(PACKAGENAME)-example.glo $(PACKAGENAME)-example.hd $(PACKAGENAME)-example.idx $(PACKAGENAME)-example.log $(PACKAGENAME)-example.out $(PACKAGENAME)-example.run.xml $(PACKAGENAME)-example.bbl $(PACKAGENAME)-example.blg $(PACKAGENAME)-example.ilg $(PACKAGENAME)-example.ind
 
 upload : $(PACKAGENAME).tds.zip $(PACKAGENAME).pdf $(PACKAGENAME).zip
-	github-upload -m application/zip -f $(PACKAGENAME).zip
+	github-upload -m application/zip -f "Quellen + Anleitung" $(PACKAGENAME).zip
 	github-upload -m application/pdf -d "Anleitung" -f $(PACKAGENAME).pdf
-	github-upload -m application/zip -d "Alle Dateien in TDS-Struktur -- in $$HOMETEXMF entpacken" -f $(PACKAGENAME).tds.zip
+	github-upload -m application/zip -d "Alle Dateien in TDS-Struktur: in '$$HOMETEXMF' entpacken" -f $(PACKAGENAME).tds.zip
 
 
 
