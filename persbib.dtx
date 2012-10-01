@@ -1,6 +1,6 @@
 \def\filename{persbib.dtx}
-\def\fileversion{0.4}
-\def\filedate{2012/08/29}
+\def\fileversion{0.5}
+\def\filedate{2012/10/01}
 % \iffalse meta-comment
 % 
 % persbib, Dokumentklasse für »Perspektive Bibliothek«
@@ -535,6 +535,27 @@ pdfusetitle
          \setunit*{\addspace}
          \iffieldundef{urlyear}{}{%\printtext[parens]{FIXME URLDATE}}{%
            \printtext[parens]{\bibstring{retrieved}\addspace\printurldate}}}}}
+%    \end{macrocode}
+%
+% Internetquellen sollen in ein eigenes Literaturverzeichnis und dort
+% nur mit URL und Abrufdatum dargestellt werden. Dazu modifizieren wir
+% das folgende Makro so, dass im Fall des BibTeX-Feldtypen
+% \verb|@online| auf die Angabe eines Datums verzichtet werden kann:
+%    \begin{macrocode}
+\renewbibmacro*{labelyear+extrayear}{%
+  \iffieldundef{labelyear}
+    {\iffieldundef{origyear}
+      {\printtext[parens]{\usebibmacro{noyear}}}
+      {\printtext[yearorunkyear]{\printfield[noformat]{origyear}}}}%
+    {\ifthenelse{\iffieldequalstr{labelyear}{inpress}\OR\iffieldequalstr{labelyear}{in press}}
+      {\printtext[parens]{\biblcstring{inpress}%
+       \iffieldundef{extrayear}
+        {\setunit{\relax}}
+        {\setunit{\apashortdash}}%
+	\printfield{extrayear}}}
+	{\ifthenelse{\iffieldundef{year}\AND\ifentrytype{online}}
+	    {\nopunct}
+	    {\printtext[yearorunkyear]{\printdateextra}}}}}
 %    \end{macrocode}
 %    \begin{macrocode}
 \renewenvironment{quote}{%
