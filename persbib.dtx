@@ -567,6 +567,49 @@ pdfusetitle
 	    {\nopunct}
 	    {\printtext[yearorunkyear]{\printdateextra}}}}}
 %    \end{macrocode}
+%
+% Für das Internetquellenverzeichnis ist es notwendig, die URL in das
+% Sortierschema mit aufzunehmen:
+%    \begin{macrocode}
+\DeclareSortingScheme{persbib}{
+  \sort{
+    \field{presort}
+  }
+  \sort[final]{
+    \field{sortkey}
+  }
+  \sort{
+    \name{sortname}
+    \name{author}
+    \name{editor}
+    \name{translator}
+    \field{sorttitle}
+    \field{title}
+  }
+  \sort{
+    \field{sortyear}
+    \field{year}
+    \field{pubstate}
+  }
+  \sort{
+    \field{sorttitle}
+    \field{title}
+  }
+  \sort{
+    \field[padside=left,padwidth=4,padchar=0]{volume}
+    \literal{0000}
+  }
+  \sort[sortcase=false]{
+    \field{url}
+  }
+}
+\ExecuteBibliographyOptions{sorting=persbib}
+%    \end{macrocode}
+% 
+% \subsubsection{Andere Formatierungen}
+% \label{sec:andere-formatierungen}
+% 
+% 
 %    \begin{macrocode}
 \renewenvironment{quote}{%
 \begingroup
