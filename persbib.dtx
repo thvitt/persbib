@@ -338,8 +338,7 @@ Beitrag\autocite{Bluemm2012} zur ersten Ausgabe der Zeitschrift.%
   12pt,
   oneside,
   titlepage=false,
-  headings=normal,
-  numbers=endperiod
+  headings=normal
 ]{scrartcl}
 %    \end{macrocode}
 %
@@ -385,13 +384,24 @@ Beitrag\autocite{Bluemm2012} zur ersten Ausgabe der Zeitschrift.%
 %  \usepackage[utf8]{inputenx}
 % \fi
 %    \end{macrocode}
+%
+% \subsubsection{Überschriften}
+%
 % Überschriften und Description-Labels in fetter Serifenschrift
 %    \begin{macrocode}
 \setkomafont{sectioning}{\rmfamily\bfseries}
 \setkomafont{descriptionlabel}{\rmfamily\bfseries}
 %    \end{macrocode}
 %
-% 
+% \emph{Perspektive Bibliothek} will einen recht merkwürdigen Stil für
+% Überschriftennummern: Bei \verb|\section| soll es einen
+% abschließenden Punkt geben, bei den tieferen Ebenen indes nicht
+% (also 2., aber 2.1).
+%    \begin{macrocode}
+\KOMAoptions{numbers=noendperiod}
+\renewcommand{\thesection}{\@arabic\c@section .}
+\renewcommand{\thesubsection}{\thesection\@arabic\c@subsection}
+%    \end{macrocode}
 %
 %\subsubsection{Fuß- und Endnoten}
 %\label{sec:footnotes}
